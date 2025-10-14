@@ -1,32 +1,32 @@
 % header
-\documentclass[openany, 14px]{book}
-\usepackage{graphicx} % Required for inserting images
+\documentclass[openany, 12px]{book}
+\usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{changepage}
 
-\title{\textbf{book}}
+\title{\textbf{A Guide to Operating System Development (for Beginners)}}
 \author{Hrishik Yendluri}
 \date{}
 
-% document
+
 \begin{document}
 \fontsize{12pt}{18pt} \selectfont
 
-% title page
+
 \maketitle
 
-% acknowledgments
 
-% table of contents
-
-% preface
 \newpage
-\chapter*{\textit{Preface}}
-This book was written to help people new to the field computer science learn more about the low level aspects of programming through the implementation of an operating system. Operating systems are closely intertwined with the hardware of a computer and therefore can be an effective method for learning all things low level. This book does not take a direct approach to the implementation of the OS. Rather, it identifies the key concepts and explains how one can go about programming them to allow for originality.
-\\\\
-This book is written on my experience developing a (toy) operating system and is heavily based upon the chronological implementation of features within that personal OS. The OS comes with some documentation to explain how it was programmed, which can be found on my website (\url{https://hrishiky.github.io/static/projects/hrishikos/index.html}). The operating system source code can be found in the following repository: \url{https://github.com/hrishiky/hrishikos}. The LaTeX code for this book can be found in the following repository: \url{INSERT LINK}. If this book or the reference operating system helped, please consider starring the repositories.
+\tableofcontents
 \clearpage
 
-% prerequisites
+
+\newpage
+\chapter*{\textit{Preface}}
+This book was written to help people new to the field computer science learn more about the low-level and systems programming through the implementation of an operating system. Operating systems are closely intertwined with the hardware of a computer and therefore can be an effective method for learning many key aspects. This book will start off providing source code, but will slowly fade it out to allow for  learning and originality. 
+\clearpage
+
+
 \newpage
 \chapter*{0 Prerequisites}
 \setcounter{section}{-1}
@@ -34,11 +34,73 @@ This book is written on my experience developing a (toy) operating system and is
 
 \newpage
 \section{Introduction}
-This section will discuss and explain the prerequisites needed for writing an operating system, including both skills and knowledge. The first two sections after this one will discuss the soft skills and the sections afterward will discuss the computer science knowledge needed.
+This section will explain the most of the prerequisites needed for writing an operating system. Some concepts, like programming languages, are out of scope of this book and will not be explained in depth; instead, basic explanations and resources will be given to encourage the reader learn on their own.
 
-\section{Mindset}
 
 \section{Research}
+Operating systems are among the most complex pieces of software ever to be created, making it difficult to find proper explanations and tutorials to programming the different parts of them. There are a few sources, that have been used to write the reference operating system which can be helpful for our own. Firstly, there are Wikipedia (\url{https://www.wikipedia.org/}) and OSDev Wiki (\url{https://wiki.osdev.org/Expanded_Main_Page}). These two sources are good for obtaining factual information, but may lack in detail for those who are new to OS development; they only explain the essential information about the topic, not implementation examples. Therefore, we also recommend the usage of artificial intelligence to help answer questions, debug programs, brainstorm ideas, etc. However, it is not recommended to use AI for writing portions of the code, as hands-on programming is necessary to learn.
+
+
+\section{Architecture: Basics}
+In essence, a computer is simply a machine that takes in an input, processes it according to an instruction set, and then gives an output, similar to a mathematical function. This definition is abstract and simple, but the reality is much more specific and complicated, hence the inclusion of this section. Computers are very specific pieces of technology and only function initially when data and instructions are both provided directly to it; they can not compute based on independent "thought." [note: unless programmed] These data and instruction are stored in various ways on a computer, which will be explained later. For now, what needs to be known is that the computer stores them in a format called binary.
+
+\begin{adjustwidth}{2em}{0em}
+\subsection{Binary}
+In our daily lives, we use a numeric system called decimal, which uses ten digits from $0-9$ to represent numbers. In contrast, binary is a numeric system that uses only two distinct digits to represent numbers: $0$ and $1$. The two number systems operate the same as each other; the only difference they have is the digits they use. To understand how to use binary, we must first understand the mathematical formulation behind the system. Base-$x$ systems are numerical systems that have $x$ digits where the position of them in a number represents a power of that base with the coefficient of the digit. The exponent value begins at $0$ in the rightmost position, and is incremented by $1$ as the position also changes by $1$ (toward the right). For example, in the base-$10$ system, the number $16$ can be expressed as $1 \cdot 10^1 + 6 \cdot 10^0$ and $256$ can be expressed as $2 \cdot 10^2 + 5 \cdot 10^1 + 6 \cdot 10^0$. In general, a number with $n$ digits written in a base-$x$ system, such as $abc \cdots z$, where each letter represents a digit, can be expressed as $a \cdot x^{n-1} + b \cdot x^{n-2} + c \cdot x^{n-3} \cdots z \cdot x^{0}$. With this understanding, the conversion between binary (base-$2$) to decimal (base-$10$) systems should be easier. For example, the binary number $1100$ can be expressed as $1 \cdot 2^{3} + 1 \cdot 2^{2} + 0 \cdot 2^{1} + 0 \cdot 2^{0}$, which evaluates to $12$ in decimal. Mathematical operations, like addition and multiplication, also apply to the binary system, but are not included the sake of brevity. \\\\
+\end{adjustwidth}
+
+By Michel Bakni - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=71644069
+
+Now that we understand binary, we can discuss why it is used and how data and instructions are stored using it in the computer. Binary is the simplest format for computers to use, as it is a system that contains just two possible values, and is why computers use binary and not, say, trinary (base-$3$). Binary is easily representable in the hardware (using transistors, which will be explained in a later section) of the computer. Each $0$ or $1$ unit is referred to as a bit, the smallest amount of information on a computer. A bit can be thought of as a switch, where each switch can be either off or on, mapping to the $0$ or $1$ of a bit, respectively. Now the question that arises is how computers are able to store instructions and data as simply $0$'s and $1$'s.
+
+\begin{adjustwidth}{2em}{0em}
+\subsection{Information Storage in Binary}
+Data includes integers, strings (text), booleans (true/false values), and other data structures that can be seen throughout programming and real life. Integers are easiest to understand, as they can be directly converted to binary ($24 \rightarrow 11000$). Strings can not be directly converted to binary, so instead they use a table to map certain binary numbers to characters, symbols, and other data seen necessary by the encoding scheme. A commonly used table to map characters is the American Standard Code for Information Interchange, or ASCII (Figure 0.2), which uses $1$ byte (defined as the size of a character; usually $8$ bits) for each code [note: this is standard ascii; extended sets exist]. In this system, numbers from binary $00000000-01111111$, or decimal $0-127$, denote control characters (manages text formatting and printer instructions), the letters of the English alphabet, and some special characters (selection of ones common in programming, math, and formatting). For example, in ASCII, the binary number $01000000$ (decimal $64$) is the "@" special character, and the binary number $00001000$ (decimal $8$) is the "[BACKSPACE]" control character. Booleans are simpler to understand. Since booleans can only have two values, they can easily mapped to a single bit, where $0$ is false and $1$ is true. However, the smallest unit of information computers can access is typically a byte at a time, so in practice, booleans are usually $1$ byte. Other data types follow in this pattern, where ones that can logically be directly converted to binary do exactly that, while more abstract concepts are usually stored with some sort of encoding or mapping. \\
+
+Instruction storage is harder to understand because knowledge of programming is required, which not be explained until a later section. For now, an abstract definition can be understood. The overarching idea is that the instructions written in some programming language must be converted into binary. To do this, many compilers convert the code into an intermediate universal form, called Assembly, usually directly before generating binary code. There are different types of Assembly based on the hardware of a computer, but they are all similar in how they can be converted to binary code. Generally, the process works by mapping each instruction in Assembly to some sequence of bits in binary, which the computer can understand and execute using a few pieces of hardware that will be explained in a later section. Since almost all programming languages convert their code to Assembly, which is directly converted to binary, it can be seen how instructions can be stored in binary.
+\\\\
+\end{adjustwidth}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\linewidth]{img/ascii-table.jpg}
+    \caption{An example image illustrating a concept in the document.}
+\end{figure}
+
+ASCII-Table.svg: ZZT32derivative work: YUFENG HUANG, Public domain, via Wikimedia Commons
+
+\begin{adjustwidth}{2em}{0em}
+\subsection{Binary Manipulation}
+Now we can store information binary, but we need a way to manipulate it in order to do significant computing. The way computers do this, in the most basic form, are through logic gates. Logic gates are the "building blocks" of all circuits and work by taking in one or more bits as input, doing an operation on it, and outputting a single bit. A logic gate can be represented conceptually as a truth table, which defines which inputs correspond to which outputs. The AND, OR, NOT, NAND, NOR, XOR, and XNOR gates are the 7 basic logic gates. The NOT gate, for example, takes in one bit and outputs the opposite of that bit ($0 \rightarrow 1$, $1 \rightarrow 0$). Explanation of each logic gate is not included for brevity, so instead there are truth tables included for the rest of the basic gates (). 
+\end{adjustwidth}
+
+Now that we understand how data and instructions can be stored and manipulated in binary, we can continue to understand how the computer processes these to apply the proper operations on the data according to the instructions. For this, we will need to understand the next topic, hardware.
+
+
+\section{Architecture: Hardware}
+To understand how computers process information, there are some main physical components within the computer we must understand first: the central processing unit, memory, and data buses. There are also other hardware components, like input/output devices, which will be explained briefly.
+
+\begin{adjustwidth}{2em}{0em}
+\subsection{CPU}
+The CPU is the core of the computer. It performs calculations, logical operations, and performs all other tasks necessary to execute a program. The CPU is made of 3 main parts: the arithmetic logic unit, control unit, and registers.
+\begin{adjustwidth}{2em}{0em}
+\subsubsection{Arithmetic Logic Unit}
+The arithmetic logic unit (ALU) is the component of the CPU that handles all mathematical and logical operations on binary, just as the name suggests. It is used for basic mathematical operations, usually addition, subtraction, multiplication, and division. They also perform comparison operations (usually greater than, equal to, and less than, and not equal to). Bitwise operations is a way to describe and operations that involve manipulating individual bits.
+\end{adjustwidth}
+\end{adjustwidth}
+
+
+\clearpage
+
+\newpage
+\chapter*{1 Booting}
+\setcounter{section}{-1}
+\clearpage
+
+\newpage
+\chapter*{2 Kernel Programming}
+\setcounter{section}{-1}
 \clearpage
 
 \end{document}
