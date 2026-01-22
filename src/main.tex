@@ -23,7 +23,7 @@
 
 \newpage
 \chapter*{\textit{Preface}}
-This book was written to help people new to the field computer science learn more about the low-level and systems programming through the implementation of an operating system. Operating systems are closely intertwined with the hardware of a computer and therefore can be an effective method for learning many key aspects. This book will start off providing source code, but will slowly fade it out to allow for  learning and originality. 
+This book was written to help people new to the field computer science learn more about the low-level and systems programming through the implementation of an operating system. Operating systems are closely intertwined with the hardware of a computer and therefore can be an effective method for learning many key aspects. This book will start off providing source code, but will slowly phase it out to allow for originality and a deeper understanding 
 \clearpage
 
 
@@ -34,14 +34,14 @@ This book was written to help people new to the field computer science learn mor
 
 \newpage
 \section{Introduction}
-This section will explain the most of the prerequisites needed for writing an operating system. Some concepts, like programming languages, are out of scope of this book and will not be explained in depth; instead, basic explanations and resources will be given to encourage the reader learn on their own.
+This section will explain the most of the prerequisites needed for writing an operating system. Some concepts, like programming languages, are out of scope of this book and will not be explained in depth; instead, basic explanations and resources will be given to encourage the reader learn on their own. The end of each subsection will have a "Full Picture" topic to help the reader understand the significance of the information and how it will tie into creating an OS.
 
 
 \section{Research}
 Operating systems are among the most complex pieces of software ever to be created, making it difficult to find proper explanations and tutorials to programming the different parts of them. There are a few sources, that have been used to write the reference operating system which can be helpful for our own. Firstly, there are Wikipedia (\url{https://www.wikipedia.org/}) and OSDev Wiki (\url{https://wiki.osdev.org/Expanded_Main_Page}). These two sources are good for obtaining factual information, but may lack in detail for those who are new to OS development; they only explain the essential information about the topic, not implementation examples. Therefore, we also recommend the usage of artificial intelligence to help answer questions, debug programs, brainstorm ideas, etc. However, it is not recommended to use AI for writing portions of the code, as hands-on programming is necessary to learn.
 
 
-\section{Architecture: Basics}
+\section{Architecture: Concept}
 In essence, a computer is simply a machine that takes in an input, processes it according to an instruction set, and then gives an output, similar to a mathematical function. This definition is abstract and simple, but the reality is much more specific and complicated, hence the inclusion of this section. Computers are very specific pieces of technology and only function initially when data and instructions are both provided directly to it; they can not compute based on independent "thought." [note: unless programmed] These data and instruction are stored in various ways on a computer, which will be explained later. For now, what needs to be known is that the computer stores them in a format called binary.
 
 \begin{adjustwidth}{2em}{0em}
@@ -57,7 +57,7 @@ Now that we understand binary, we can discuss why it is used and how data and in
 \subsection{Information Storage in Binary}
 Data includes integers, strings (text), booleans (true/false values), and other data structures that can be seen throughout programming and real life. Integers are easiest to understand, as they can be directly converted to binary ($24 \rightarrow 11000$). Strings can not be directly converted to binary, so instead they use a table to map certain binary numbers to characters, symbols, and other data seen necessary by the encoding scheme. A commonly used table to map characters is the American Standard Code for Information Interchange, or ASCII (Figure 0.2), which uses $1$ byte (defined as the size of a character; usually $8$ bits) for each code [note: this is standard ascii; extended sets exist]. In this system, numbers from binary $00000000-01111111$, or decimal $0-127$, denote control characters (manages text formatting and printer instructions), the letters of the English alphabet, and some special characters (selection of ones common in programming, math, and formatting). For example, in ASCII, the binary number $01000000$ (decimal $64$) is the "@" special character, and the binary number $00001000$ (decimal $8$) is the "[BACKSPACE]" control character. Booleans are simpler to understand. Since booleans can only have two values, they can easily mapped to a single bit, where $0$ is false and $1$ is true. However, the smallest unit of information computers can access is typically a byte at a time, so in practice, booleans are usually $1$ byte. Other data types follow in this pattern, where ones that can logically be directly converted to binary do exactly that, while more abstract concepts are usually stored with some sort of encoding or mapping. \\
 
-Instruction storage is harder to understand because knowledge of programming is required, which not be explained until a later section. For now, an abstract definition can be understood. The overarching idea is that the instructions written in some programming language must be converted into binary. To do this, many compilers convert the code into an intermediate universal form, called Assembly, usually directly before generating binary code. There are different types of Assembly based on the hardware of a computer, but they are all similar in how they can be converted to binary code. Generally, the process works by mapping each instruction in Assembly to some sequence of bits in binary, which the computer can understand and execute using a few pieces of hardware that will be explained in a later section. Since almost all programming languages convert their code to Assembly, which is directly converted to binary, it can be seen how instructions can be stored in binary.
+Instruction storage requires knowledge from later sections, so, for now, a more abstract definition will suffice. The overarching idea is that the instructions written in some programming language must be converted into binary. To do this, many compilers convert the code into an intermediate universal form, called Assembly, usually directly before generating binary code. There are different types of Assembly based on the hardware of a computer, but they are all similar in how they can be converted to binary code. Generally, the process works by mapping each instruction in Assembly to some sequence of bits in binary, which the computer can understand and execute using a few pieces of hardware that will be explained in a later section. Since almost all programming languages convert their code to Assembly, which is directly converted to binary, it can be seen how instructions can be stored in binary.
 \\\\
 \end{adjustwidth}
 
@@ -82,19 +82,72 @@ Now that we understand how data and instructions can be stored and manipulated i
 To understand how computers process information, there are some main physical components within the computer we must understand first: the central processing unit, memory, and data buses. There are also other hardware components, like input/output devices, which will be explained briefly.
 
 \begin{adjustwidth}{2em}{0em}
-\subsection{CPU}
-The CPU is the core of the computer. It performs calculations, logical operations, and performs all other tasks necessary to execute a program. The CPU is made of 3 main parts: the arithmetic logic unit, control unit, and registers.
+\subsection{Central Processing Unit}
+The central processing unit (CPU) is the core processor of the computer, meaning it is what does the primary computation necessary to do the tasks required for proper function. It performs calculations, logical operations, and performs all other tasks necessary to execute a program. The CPU is made of 3 main parts: the arithmetic logic unit, control unit, and registers.
 \begin{adjustwidth}{2em}{0em}
 \subsubsection{Arithmetic Logic Unit}
-The arithmetic logic unit (ALU) is the component of the CPU that handles all mathematical and logical operations on binary, just as the name suggests. It is used for basic mathematical operations, usually addition, subtraction, multiplication, and division. They also perform comparison operations (usually greater than, equal to, and less than, and not equal to). Bitwise operations is a way to describe and operations that involve manipulating individual bits.
+The arithmetic logic unit (ALU) is the component of the CPU that handles all mathematical and logical operations on binary, just as the name suggests. It is used for basic mathematical operations, usually addition, subtraction, multiplication, and division. It also perform comparison operations, usually greater than, equal to, and less than, and not equal to. Its final major use is to apply logic gates on data. To generalize, it can be stated that the ALU performs bitwise operations. Bitwise operations are all operations that involve manipulating individual bits, which encompasses the previously stated operations and many others, like bit shifts [READ MORE].
+\end{adjustwidth}
+
+\begin{adjustwidth}{2em}{0em}
+\subsubsection{Control Unit}
+The control unit is the part of the CPU that performs its core functionality: computation. It does this by cycling through fetch, decode, and execute stages. The CPU starts with the fetch stage. In the fetch stage, the control unit retrieves the current instruction from the memory using the instruction pointer and stores the encoded instruction in the instruction register (). For now, the memory can be thought of as a type of hardware used by the computer to store information (in bits); it is essentially the computer equivalent of human memory. Once the CPU retrieves the instruction from the memory, the decode stage begins. The instruction retrieved from memory is stored in a condensed form that includes an opcode and operands, where the opcode specifies which operation to do, and the operands specify the inputs to the operation (). The opcodes and operands are then interpreted by the hardware of the computer and converted into control signals, allowing for the correct instruction to be performed during the final stage: execution. After the instruction is executed, the instruction pointer is incremented and the cycle continues. Within, or outside, of the control unit is the clock, which is used to synchronize and pace each step of the fetch, decode, and execute stages of the cycle in order to allow for other hardware components to work in parallel with the CPU, increasing the overall computer speed. The clock runs in cycles and the clock speed is measured in hertz (Hz), where 1 Hz is equivalent to one cycle per second. It is important to note that these cycles are independent of other hardware and that the cycles referred to in the fetch-decode-execute cycle are different from clock cycles; the pace is generated by the clock and other hardware simply follow the clock cycles to work in parallel, with the stages of the fetch-decode-execute cycle usually taking 1 clock cycle each. Modern CPUs have clock speeds that are on the magnitude of GHz (billions of cycles per second).
+\end{adjustwidth}
+
+\begin{adjustwidth}{2em}{0em}
+\subsubsection{Registers} 
+Registers are the fastest type of memory for computers. The registers are a set of memory locations close to the control unit and ALU to increase their speed, usually achieving speeds of 0 or 1 clock cycles. The sizes of each of the registers vary between computers but are usually 64 bits in modern CPUs and 32 bits in older CPUs from around the mid 1980s till the late 1990s and early 2000s (64 bit CPUs technically existed before this time frame but were only found in super computers, only becoming the standard afterwards). There are a many registers in a CPU, with the main types being general purpose registers and special purpose registers. The general purpose registers, as the name suggests, are used for general tasks that instructions perform, such as adding or subtracting values (the inputs and outputs of the performed operations are stored in the registers). In the x86 architecture, which is what will be used in this book, these types of registers are named using letters the A, B, C, D followed by an X and preceded by either R (to specify a 64 bit register), E (to specify a 32 bit register), or no letter (to specify a 16 bit register). Additionally, the 16 bit registers can be split into the higher (bits $8 \rightarrow 15$) and lower (bits $0 \rightarrow 7$) and referred to by replacing the X in the register name with H or L to specify the higher and lower bits respectively. For example, the register ECX would refer to one of the general purpose 32 bit registers, AX would refer to one of the 16 bit general purpose registers, and BH would refer to the higher 8 bits of one of the 16 bit general purpose registers. An important thing to keep in mind is that even with higher register sizes, smaller registers can still be referred to, such as using a 16 bit register on a 64 bit CPU. The CPU simply masks the other values stored in the register and reads the amount of data specified by the register specified in the instruction (when doing this type of operation, the lower bits of the register are used; for example bits $0 \rightarrow 31$ would be used when referring to the EAX register of a 64 bit CPU, whose full register size goes from bits $0 \rightarrow 63$). The special purpose registers are a set of registers that have purposes that are outside of doing tasks from user programs. These registers are mostly used for tasks that are critical to the control of the CPU and the main ones that need to be known are the instruction pointer and the instruction register. The instruction pointer is a register that holds the location of the current instruction being executed by the control unit, allowing the computer to keep track of where in a program the CPU is, even if it exits the main part of the program to complete other tasks like functions (). The instruction register is the register that holds the instruction itself, allowing for it to be decoded and executed by the control unit.
 \end{adjustwidth}
 \end{adjustwidth}
 
+\begin{adjustwidth}{2em}{0em}
+\subsection{Memory} 
+The memory, also called the primary memory, is the main component in computers that temporarily stores information. The primary form of memory in modern computers is the RAM (random access memory). 
+\end{adjustwidth}
+
+\begin{adjustwidth}{2em}{0em}
+\subsection{Data buses} 
+\end{adjustwidth}
+
+\begin{adjustwidth}{2em}{0em}
+\subsection{Other Components} 
+\end{adjustwidth}
+
+\section{Architecture: Full Picture}
+
+\section{Programming: Concept}
+
+\section{Programming: Assembly}
+
+\section{Programming: C}
+
+\section{Programming: Full Picture}
+
+\section{Operating Systems: Concept}
+
+\section{Operating Systems: Booting}
+
+\section{Operating Systems: CPU Modes}
+
+\section{Operating Systems: Kernel}
 
 \clearpage
 
 \newpage
 \chapter*{1 Booting}
+
+\section{Setup}
+
+\section{INT 13H}
+
+\section{Simple Functionality}
+
+\section{Loading to Memory}
+
+\section{Switching CPU Modes}
+
+\section{Jumping}
+
 \setcounter{section}{-1}
 \clearpage
 
