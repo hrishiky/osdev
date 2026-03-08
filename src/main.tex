@@ -23,7 +23,7 @@
 
 \newpage
 \chapter*{\textit{Preface}}
-This book was written to help people new to the field computer science learn more about the low-level and systems programming through the implementation of an operating system. Operating systems are closely intertwined with the hardware of a computer and therefore can be an effective method for learning many key aspects. This book will start off providing source code, but will slowly phase it out to allow for originality and a deeper understanding 
+This book was written to help people new to the field of computer science learn more about the low-level and systems programming through programming an operating system. Operating systems are closely intertwined with the hardware of a computer and therefore are an effective way of learning about various low-level topics. This book will start off providing source code, but will slowly phase it out to allow for originality, a deeper understanding of concepts, and independence.
 \clearpage
 
 
@@ -38,8 +38,7 @@ This section will explain the most of the prerequisites needed for writing an op
 
 
 \section{Research}
-Operating systems are among the most complex pieces of software ever to be created, making it difficult to find proper explanations and tutorials to programming the different parts of them. There are a few sources, that have been used to write the reference operating system which can be helpful for our own. Firstly, there are Wikipedia (\url{https://www.wikipedia.org/}) and OSDev Wiki (\url{https://wiki.osdev.org/Expanded_Main_Page}). These two sources are good for obtaining factual information, but may lack in detail for those who are new to OS development; they only explain the essential information about the topic, not implementation examples. Therefore, we also recommend the usage of artificial intelligence to help answer questions, debug programs, brainstorm ideas, etc. However, it is not recommended to use AI for writing portions of the code, as hands-on programming is necessary to learn.
-
+Operating systems are among the most complex pieces of software ever to be created, making it difficult to find proper explanations and tutorials to programming the different parts of them. There are a few sources, that have been used to write the reference operating system which can be helpful for our own. Firstly, there are Wikipedia (\url{https://www.wikipedia.org/}) and OSDev Wiki (\url{https://wiki.osdev.org/Expanded_Main_Page}). These two sources are good for obtaining overall information, especially the OSDev wiki, but they may lack in detail for those who are new to OS development; they only explain the essential information about the topic and do not have extensive examples of implementation. To make up for this, a variety of other sources should be found and used by the reader. An example of this would be BrokenThorn Entertainment's Operating System Development Series (\url{https://www.brokenthorn.com/Resources/OSDevIndex.html}), which contains various implementation examples. Be warned that it also contains bugs and incorrect syntax, if you are expecting to directly copy its code. Taking a tangent, copying code in general is discouraged, as originality is lost and usually the person copying it does not take time to understand the code and will not learn from it. Back on topic, sources like these should be searched for the reader so that they build the skill of researching and properly using sources, rather than relying on things like AI as a crutch, which will not allow for them to actually learn the concepts. If time is not spent researching, learning, and failing, do not expect to learn anything substantial.
 
 \section{Architecture: Concept}
 In essence, a computer is simply a machine that takes in an input, processes it according to an instruction set, and then gives an output, similar to a mathematical function. This definition is abstract and simple, but the reality is much more specific and complicated, hence the inclusion of this section. Computers are very specific pieces of technology and only function initially when data and instructions are both provided directly to it; they can not compute based on independent "thought." [note: unless programmed] These data and instruction are stored in various ways on a computer, which will be explained later. For now, what needs to be known is that the computer stores them in a format called binary.
@@ -79,10 +78,11 @@ Now that we understand how data and instructions can be stored and manipulated i
 
 
 \section{Architecture: Hardware}
-To understand how computers process information, there are some main physical components within the computer we must understand first: the central processing unit, memory, and data buses. There are also other hardware components, like input/output devices, which will be explained briefly.
+To understand how computers process information, there are some main hardware components within the computer we must understand first: the central processing unit, memory, and buses. There are also other hardware components, like input/output devices, which will be explained briefly.
 
 \begin{adjustwidth}{2em}{0em}
 \subsection{Central Processing Unit}
+[INSERT CPU MODES SOMEWHERE] [INSERT INSTRCUTION SET]
 The central processing unit (CPU) is the core processor of the computer, meaning it is what does the primary computation necessary to do the tasks required for proper function. It performs calculations, logical operations, and performs all other tasks necessary to execute a program. The CPU is made of 3 main parts: the arithmetic logic unit, control unit, and registers.
 \begin{adjustwidth}{2em}{0em}
 \subsubsection{Arithmetic Logic Unit}
@@ -96,64 +96,112 @@ The control unit is the part of the CPU that performs its core functionality: co
 
 \begin{adjustwidth}{2em}{0em}
 \subsubsection{Registers} 
-Registers are the fastest type of memory for computers. The registers are a set of memory locations close to the control unit and ALU to increase their speed, usually achieving speeds of 0 or 1 clock cycles. The sizes of each of the registers vary between computers but are usually 64 bits in modern CPUs and 32 bits in older CPUs from around the mid 1980s till the late 1990s and early 2000s (64 bit CPUs technically existed before this time frame but were only found in super computers, only becoming the standard afterwards). There are a many registers in a CPU, with the main types being general purpose registers and special purpose registers. The general purpose registers, as the name suggests, are used for general tasks that instructions perform, such as adding or subtracting values (the inputs and outputs of the performed operations are stored in the registers). In the x86 architecture, which is what will be used in this book, these types of registers are named using letters the A, B, C, D followed by an X and preceded by either R (to specify a 64 bit register), E (to specify a 32 bit register), or no letter (to specify a 16 bit register). Additionally, the 16 bit registers can be split into the higher (bits $8 \rightarrow 15$) and lower (bits $0 \rightarrow 7$) and referred to by replacing the X in the register name with H or L to specify the higher and lower bits respectively. For example, the register ECX would refer to one of the general purpose 32 bit registers, AX would refer to one of the 16 bit general purpose registers, and BH would refer to the higher 8 bits of one of the 16 bit general purpose registers. An important thing to keep in mind is that even with higher register sizes, smaller registers can still be referred to, such as using a 16 bit register on a 64 bit CPU. The CPU simply masks the other values stored in the register and reads the amount of data specified by the register specified in the instruction (when doing this type of operation, the lower bits of the register are used; for example bits $0 \rightarrow 31$ would be used when referring to the EAX register of a 64 bit CPU, whose full register size goes from bits $0 \rightarrow 63$). The special purpose registers are a set of registers that have purposes that are outside of doing tasks from user programs. These registers are mostly used for tasks that are critical to the control of the CPU and the main ones that need to be known are the instruction pointer and the instruction register. The instruction pointer is a register that holds the location of the current instruction being executed by the control unit, allowing the computer to keep track of where in a program the CPU is, even if it exits the main part of the program to complete other tasks like functions (). The instruction register is the register that holds the instruction itself, allowing for it to be decoded and executed by the control unit.
+Registers are the fastest type of memory for computers. The registers are a set of memory locations close to the control unit and ALU to increase their speed, usually achieving speeds of 0 or 1 clock cycles. The sizes of each of the registers vary between computers but are usually 64 bits in modern CPUs and 32 bits in older CPUs from around the mid 1980s till the late 1990s and early 2000s (64 bit CPUs technically existed before this time frame but were only found in super computers, only becoming the standard afterwards). There are a many registers in a CPU, with the main types being general purpose registers and special purpose registers. The general purpose registers, as the name suggests, are used for general tasks that instructions perform, such as adding or subtracting values (the inputs and outputs of the performed operations are stored in the registers). In the x86 architecture, which is what will be used in this book, these types of registers are named using letters the A, B, C, D followed by an X and preceded by either R (to specify a 64 bit register), E (to specify a 32 bit register), or no letter (to specify a 16 bit register). Additionally, the 16 bit registers can be split into the higher (bits $8 \rightarrow 15$) and lower (bits $0 \rightarrow 7$) and referred to by replacing the X in the register name with H or L to specify the higher and lower bits respectively. For example, the register ECX would refer to one of the general purpose 32 bit registers, AX would refer to one of the 16 bit general purpose registers, and BH would refer to the higher 8 bits of one of the 16 bit general purpose registers. An important thing to keep in mind is that even with higher register sizes, smaller registers can still be referred to, such as using a 16 bit register on a 64 bit CPU. The CPU simply masks the other values stored in the register and reads the amount of data specified by the register specified in the instruction (when doing this type of operation, the lower bits of the register are used; for example bits $0 \rightarrow 31$ would be used when referring to the EAX register of a 64 bit CPU, whose full register size goes from bits $0 \rightarrow 63$). The special purpose registers are a set of registers that have purposes that are outside of doing tasks from user programs. These registers are mostly used for tasks that are critical to the control of the CPU and the main ones that need to be known are the instruction pointer (\_IP). The instruction pointer is a register that holds the location of the current instruction being executed by the control unit, allowing the computer to keep track of where in a program the CPU is, even if it exits the main part of the program to complete other tasks like functions (). The instruction register is the register that holds the instruction itself, allowing for it to be decoded and executed by the control unit [INSERT PROGRAM COUNTER].
 \end{adjustwidth}
 \end{adjustwidth}
 
 \begin{adjustwidth}{2em}{0em}
 \subsection{Memory} 
-The memory, also called the primary memory, is the main component in computers that temporarily stores information. The primary form of memory in modern computers is the RAM (random access memory). 
+The memory, also called the primary memory, is the main component in computers that temporarily stores information. The primary form of memory in modern computers is the RAM (random access memory). Memory can be thought of as a long row of values. Each box has a memory address associated with it, starting from 0, usually written in hexadecimal format.
+\begin{adjustwidth}{2em}{0em}
+\subsubsection{Hexadecimal}
+These memory addresses are usually seen in hexadecimal (base-16) format which is denoted with a "0x" prefix. Hexadecimal uses the characters A-F to represent the decimal numbers 10-16; the hexadecimal digits are composed of numbers 0-9 and characters A-F. For example, the 42 in binary be equivalent to 0x2A in hexadecimal. A special property of hexadecimal is that each digit in hexadecimal is able to store 4 digits of binary, making conversion between each other easy. For example, to convert the binary number 101000010110 to hexadecimal, first the number should be split into groups of four digits (appending 0s to the front if needed): 1010 - 0001 - 0110. Then, each set of four digits should be mapped to their hexadecimal counterpart: 1010 (binary) -> 10 (decimal) -> A (hexidecimal). Conversion to binary as an intermediate is not necessary, it is just show to help build intuition. Doing this to each group gives us A | 1 | 6. Then, we just join the numbers together to get the final binary number: 0xA16. To convert a hexadecimal number to binary, this process is simply reversed, with each digit mapped to its binary counterpart, and then joining each set of four binary digits together.
+\end{adjustwidth}
+\begin{adjustwidth}{2em}{0em}
+\subsubsection{Hexadecimal Usage}
+One thing to keep in mind in this section is that computers do not and can not physically use hexadecimal values, as the basic hardware is in binary [talk about trinary]. Hexadecimal is only used as a convenient "abstraction" for binary to make values shorter and easier to understand. Hexadecimal numbers in operating system contexts are usually appended with 0s such that it is the same number of bits as the CPU mode; for example 0xDEAD would become 0x000000000000DEAD for a 64 bit CPU. This is because the CPU mode is equivalent to the register size being used, and to reflect this, the values are written such that they are exactly what are written in the registers: one of the main contexts that hexadecimal numbers are used. For example, the 64 bit RIP register, the instruction pointer simply contains a 64 bit memory address which holds the machine code instruction to be executed by the CPU (that is why it is called a pointer, it simply "points" to the location where the information of interest is stored); if the machine code being executed by the CPU was located at 0xCAFEBABE, the RIP register would contain the hexadecimal value 0x00000000CAFEBABE (of course, this would be physically be stored in the register as binary). Although the finite size of the registers introduces a maximum value they are able to hold (0xFFFFFFFFFFFFFFFF for 64 bit registers) and therefore a maximum memory address, different techniques that will be discussed in the future, like paging, will allow for an increased memory range.
+\end{adjustwidth}
+The memory is used to store a multitude of things, such as machine code, data values, etc. Generally, anything that can be written in binary can be written into memory. If the memory contains continuous binary machine code starting at some memory address, the CPU is able to start execution from that address. This requires that the machine code is flat (does not contain a special file structure that must be parsed and set up), executable (contains native machine code the CPU can run), and has no dependencies on code or data that is not stored in the binary itself; all information necessary for execution must be stored in and referenced by the binary. If this is not the case, extra setup is required, as we will see in the future chapters with executing program files, such as ELFs. Before we can move onto the next hardware component, there are two last thing to learn about memory.
+\begin{adjustwidth}{2em}{0em}
+\subsubsection{Types of Memory Addresses}
+The first type of memory address, and the one that is used in the lower level part of the operating system are physical addresses. Physical addresses are memory addresses that directly correlate to locations on the physical hardware. This means that the physical address 0xDEADBEEF would correlate to the same address 0xDEADBEEF in the memory; there is no abstraction. Virtual addresses are the second type of memory addresses. Virtual addressses allow each program using virtual addressing to use memory as if it was a single, contiguous segment, abstracting away physical addresses. This allows programs to be flexible, as they no longer need hard coded addresses to store information, or to do any other tasks they are made for. A piece of hardware, called the MMU, performs the mapping from virtual to physical addresses (once it is setup by the operating system), since virtual addresses are just simulated and still require real physical addresses to map to in order to read and write information.
+\end{adjustwidth}
+\begin{adjustwidth}{2em}{0em}
+\subsubsection{Modes of Memory Addressing}
+Memory addressing the the way by which programs address memory. There are 4 main modes of addressing that we will use to write programs in different levels of abstraction. The first mode is direct addressing, which involves explicitly referencing a memory address in the program, such as writing an assembly command with one of the parameters being a memory address. The second mode is indirect addressing, where the address fed to the program is a pointer to a memory location that contains the actual address of interest (this pointing is similar to the instruction pointer register). The third mode is indexed addressing, where the address is stored as a base and offset pair. The base contains the starting point of the memory segment, and the offset specifies the address offset in that segment which contains the memory address. This is done due to its efficiency when traversing contiguous data structures, like arrays, its parallels with how hardware devices usually address, and to prevent hard coded addressing. The fourth mode of addressing is relative, which is similar to indexed addressing, except the base is usually the start address of the program in memory or the program counter.
+\end{adjustwidth}
 \end{adjustwidth}
 
 \begin{adjustwidth}{2em}{0em}
-\subsection{Data buses} 
+\subsection{Buses}
+Data buses are what allow all of these devices to speak to each other. The main buses are the data bus, the address bus, and the control bus. The data bus is a bidirectional bus that actually transfers the data from different locations, such as from the memory to a CPU register. The address bus is a unidirectional bus, from the CPU to the memory, used to specify memory addresses from which another bus, like the data bus can begin to read data from. The final bus is the bidirectional control bus, between the CPU and other devices, used to time operations and actions between the different components to keep the execution in sync. [expand] [insert serial ports somewhere]
 \end{adjustwidth}
 
 \begin{adjustwidth}{2em}{0em}
 \subsection{Other Components} 
+There are a variety of other components that make up the computers that we use in daily lives. The biggest ones would be input devices, like keyboards and mice, and output devices, like screens and speakers. There are also different types of processors, like GPUs, which are devices dedicated to graphics due and are consequently optimized for fast and parallel matrix operations (the math that drives 3D graphics, AI, etc.) [expand]
 \end{adjustwidth}
 
 \section{Architecture: Full Picture}
+assuming setup cpu registers n stuff. first fetch step: first the address bus is set to the value in the program counter. the data bus reads this value from the memory into the instruction register of the cpu. then it incrememts the pc then decode: the cpu then uses its control unit to processes this into signals that it can send to perform the operating specified, the execute stage. restart cycle.[write formally]
 
 \section{Programming: Concept}
+Now we understand the context we are working it. Now, the natural question that arises is how do we, the programmers, control all of this? We do this through programming languages. We will use two in this book: assembly and C. These are usually the standard for creating operating systems, as assembly provides the low level control required for setup of the operating system and specific CPU instructions, and C provides an abstraction once said setup is done, so that programming the operating system becomes much easier. Other languages can be used, but they require either lots of setup when compiling or have features that are unable to be compiled so that they can run in an operating system environment. Of course, once the base of the operating system is done and all required functionality of the languages is implemented, these languages can be used. Assembly is able to be used since it is a language written in the human-readable versions of CPU instructions, called instructions or mnemonics,  rather than binary opcodes. This is where we will see things like the "mov", "add", and "jmp" mnemonics. C is able to be used since it is a language also very close to assembly, but it is able to abstract away all of the instructions themselves into different features which are commonly used in programs, such as loops, which are then able to be compiled into machine language. For C, some compiler setup is required such that the programs outputted do not have any external dependencies that would not be found in a standalone operating system environment. A program without these dependencies are called a freestanding program, and we must specify this as the output to the compiler. For the example operating system, and this book's examples, these compilers will be NASM for assembly and GCC for C, but they can be switched out for other compilers that offer the same functionality.
 
 \section{Programming: Assembly}
+Assembly is what will create the foundation of the operating system. It is the closest (human-readable) language that we are able to get to machine code, and is directly compiled to it. Specifically, we will be using x86 assembly in this book, since it is about targeting x86 architecture computers with legacy devices. Computer architectures refer to the type of CPU being used, defined by its design and ISA (instruction set). Since the CPU that we are targeting is an x86/x86\_64 chip, the assembly language that we use will correspond to it (x86\_64 is the 64 bit extension of the x86 chips, since they were originally made for 32 bit operation). Assembly languages come in different formats for syntax, called flavors in the assembly domain. The two main ones are Intel and AT\&T syntax, where the difference is that in Intel syntax, the operands are in a "destination, source" order, while in AT\&T syntax, it is "source, destination". Additionally, in AT\&T syntax, registers have a "\%" prefix and values have a "\$" prefix. There are are other differences, but these are the most obvious ones. This will explain the differences in the code that can be seen across examples from various sources. It is out of the scope of this book to teach all of x86 assembly. Therefore, you are encouraged learn the basics of assembly on your own. To start off, here are some sources where you can learn the fundamentals of assembly easily: [w3schools] [olivestem youtube].
 
 \section{Programming: C}
 
+
 \section{Programming: Full Picture}
+
 
 \section{Operating Systems: Concept}
 
-\section{Operating Systems: Booting}
 
-\section{Operating Systems: CPU Modes}
+\section{Operating Systems: Bootloader}
+
 
 \section{Operating Systems: Kernel}
 
+
+\section{Operating Systems: Full Picture}
+
+
 \clearpage
+
 
 \newpage
 \chapter*{1 Booting}
+\setcounter{section}{-1}
 
 \section{Setup}
 
-\section{INT 13H}
+\section{BIOS / INT 13H}
 
-\section{Simple Functionality}
+\section{Printing}
 
-\section{Loading to Memory}
+\section{Loading Disk to Memory}
 
 \section{Switching CPU Modes}
 
 \section{Jumping}
 
-\setcounter{section}{-1}
+\section{Preparing for Kernel}
+
+\section{Loading ELFs}
+
 \clearpage
 
 \newpage
 \chapter*{2 Kernel Programming}
 \setcounter{section}{-1}
+
+\section{VGA Text Driver}
+
+\section{Interrupts}
+
+\section{User Programs: Shell}
+
+\section{Memory Manager}
+
+\section{File System}
+
 \clearpage
 
+\newpage
+\chapter*{3 Finale}
+\setcounter{section}{-1}
+\clearpage
 \end{document}
